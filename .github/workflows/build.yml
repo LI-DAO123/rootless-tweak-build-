@@ -1,23 +1,30 @@
-name: Build Rootless Tweak
+name: Build Tweak (Rootful & Rootless)
 
 on:
   push:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
-  workflow_dispatch:
+  workflow_dispatch: # 允许手动点击按钮触发构建
 
 jobs:
   build:
     runs-on: macos-latest
+    strategy:
+      matrix:
+        # 矩阵构建：同时生成 rootless 和 rootful 两个版本
+        scheme: [rootless, rootful]
+      fail-fast: false
+
     env:
+      # 解决 api.github.com 请求失败 (限流) 的问题
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
-      - name: Checkout repository
+      - name: 1. 检出你的代码
         uses: actions/checkout@v4
 
-      - name: Checkout Theos
+      - name: 2. 检出 Theos
         uses: actions/checkout@v4
         with:
           repository: theos/theos
@@ -25,24 +32,40 @@ jobs:
           submodules: recursive
           path: theos
 
-      - name: Checkout SDKs
+      - name: 3. 检出 SDKs (拉取完整SDK库，彻底解决找不到15.0的问题)
         uses: actions/checkout@v4
         with:
-          repository: xybp888/iOS-SDKs
+          repository: theos/sdks
           ref: master
-          sparse-checkout: iPhoneOS15.5.sdk
           path: theos/sdks
 
-      - name: Install dependencies
-        run: brew install make xz ldid
+      - name: 4. 安装依赖
+        run: |
+          brew install make xz ldid
 
-      - name: Build package (rootless)
+      - name: 5. 清理上一次的编译缓存
         run: |
           export THEOS=${{ github.workspace }}/theos
-          make clean package FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          make clean || true
 
-      - name: Upload deb artifact
+      - name: 6. 开始构建包 (${{ matrix.scheme }})
+        run: |
+          export THEOS=${{ github.workspace }}/theos
+          
+          # 根据矩阵变量决定是否启用 rootless
+          if [ "${{ matrix.scheme }}" == "rootless" ]; then
+            echo "==> 正在构建 Rootless (无根) 包..."
+            make package FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          else
+            echo "==> 正在构建 Rootful (有根) 包..."
+            make package FINALPACKAGE=1
+          fi
+
+      - name: 7. 上传编译好的 deb
         uses: actions/upload-artifact@v4
         with:
-          name: rootless-deb
-          path: packages/*_iphoneos-arm64.deb
+          # 上传的压缩包名字会区分 rootless 和 rootful
+          name: Tweak-${{ matrix.scheme }}-deb
+          # 匹配所有生成的 deb 文件
+          path: packages/*.deb
+          if-no-files-found: error
