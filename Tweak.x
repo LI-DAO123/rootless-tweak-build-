@@ -1,5 +1,7 @@
 %hook SpringBoard
-- (void)applicationDidFinishLaunching:(id)orig {
+
+- (void)applicationDidFinishLaunching:(id)application {
     %orig;
 }
+
 %end
