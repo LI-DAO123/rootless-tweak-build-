@@ -1,10 +1,11 @@
 ARCHS = arm64 arm64e
-TARGET = iphone:clang:latest:15.0
+TARGET = iphone:clang:15.0
+THEOS_PACKAGE_SCHEME = rootless
 
 include $(THEOS)/makefiles/common.mk
 
-TWEAK_NAME = Tweak
-Tweak_FILES = Tweak.x
+TWEAK_NAME = MyFirstTweak
+MyFirstTweak_FILES = Tweak.x
+MyFirstTweak_FILTER = Filter.plist
 
-# 必须包含这一行，它定义了 package 规则
 include $(THEOS_MAKE_PATH)/tweak.mk
