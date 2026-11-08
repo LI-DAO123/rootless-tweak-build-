@@ -8,5 +8,6 @@ TWEAK_NAME = MyFirstTweak
 
 MyFirstTweak_FILES = Tweak.x
 MyFirstTweak_CFLAGS = -fobjc-arc
+MyFirstTweak_USE_MODULES = 0
 
 include $(THEOS_MAKE_PATH)/tweak.mk
