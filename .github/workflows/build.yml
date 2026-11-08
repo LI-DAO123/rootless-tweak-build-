@@ -1,6 +1,47 @@
-- name: 3. 检出 SDKs (拉取完整SDK库)
+name: Build Tweak
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-13
+    strategy:
+      matrix:
+        scheme: [rootless, rootful]
+      fail-fast: false
+
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Checkout Code
         uses: actions/checkout@v4
+
+      - name: Setup Theos
+        uses: Randomblock1/theos-action@v1
         with:
-          repository: Tonwalter888/iOS-SDKs
-          ref: master
-          path: theos/sdks
+          theos-dir: theos
+          theos-sdks: https://github.com/theos/sdks
+          theos-sdks-branch: master
+
+      - name: Build Package
+        run: |
+          export THEOS=${{ github.workspace }}/theos
+          make clean
+          
+          if [ "${{ matrix.scheme }}" == "rootless" ]; then
+            echo "Building rootless package..."
+            make package FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          else
+            echo "Building rootful package..."
+            make package FINALPACKAGE=1
+          fi
+
+      - name: Upload Deb
+        uses: actions/upload-artifact@v4
+        with:
+          name: Tweak-${{ matrix.scheme }}-deb
+          path: packages/*.deb
