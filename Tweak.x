@@ -1,5 +1,13 @@
 #import <UIKit/UIKit.h>
 
+static UIViewController *topViewController(void) {
+    UIViewController *top = [UIApplication sharedApplication].connectedScenes.anyObject.delegate.window.rootViewController;
+    while (top.presentedViewController) {
+        top = top.presentedViewController;
+    }
+    return top;
+}
+
 %hook SpringBoard
 - (void)applicationDidFinishLaunching:(id)arg1 {
     %orig;
@@ -11,8 +19,10 @@
                                                      style:UIAlertActionStyleDefault
                                                    handler:nil];
         [alert addAction:ok];
-        UIViewController *top = [UIApplication sharedApplication].keyWindow.rootViewController;
-        [top presentViewController:alert animated:YES completion:nil];
+        UIViewController *top = topViewController();
+        if (top) {
+            [top presentViewController:alert animated:YES completion:nil];
+        }
     });
 }
 %end
