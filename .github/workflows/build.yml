@@ -1,7 +1,7 @@
-name: Build Rootless Tweak
+name: Build Tweak
 on:
   push:
-    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -10,30 +10,14 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v4
 
-      - name: Install system dependencies
-        run: |
-          sudo apt update
-          sudo apt install -y git curl unzip perl build-essential bash ca-certificates
+      - name: Build rootless tweak
+        uses: hbang/build-theos-tweak@main
+        with:
+          scheme: rootless
+          archs: arm64,arm64e
 
-      - name: Install Theos official
-        run: |
-          bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
-          echo "THEOS=$HOME/theos" >> $GITHUB_ENV
-
-      - name: Remove old SDK before install
-        run: |
-          rm -rf $THEOS/sdks/*.sdk
-
-      - name: Install SDK
-        run: |
-          $THEOS/bin/install-sdk latest || true
-
-      - name: Build
-        run: |
-          make clean package THEOS_PACKAGE_SCHEME=rootless
-
-      - name: Upload deb
+      - name: Upload built deb
         uses: actions/upload-artifact@v4
         with:
-          name: MyFirstTweak-deb
+          name: tweak-package
           path: packages/*.deb
