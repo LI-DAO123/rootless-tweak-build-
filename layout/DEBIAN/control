@@ -1,9 +1,9 @@
-Package: com.test.myfirsttweak
+Package: com.lidao123.tweak
 Name: MyFirstTweak
-Version: 0.0.1
-Architecture: iphoneos-arm64e
+Version: 1.0.0
+Architecture: iphoneos-arm
+Description: A simple tweak.
+Maintainer: LiDao
+Author: LiDao
 Section: Tweaks
-Maintainer: Test
-Author: Test
-Description: 第一个 rootless 测试 tweak，加载后弹窗
-Depends: firmware (>= 15.0), mobilesubstrate
+Depends: mobilesubstrate
