@@ -1,8 +1,9 @@
-Package: com.example.myfirsttweak
+Package: com.test.myfirsttweak
 Name: MyFirstTweak
-Version: 1.0.0
-Architecture: iphoneos-arm64
-Maintainer: me
-Description: My first rootless tweak
-Depends: mobilesubstrate
+Version: 0.0.1
+Architecture: iphoneos-arm64e
 Section: Tweaks
+Maintainer: Test
+Author: Test
+Description: 第一个 rootless 测试 tweak，加载后弹窗
+Depends: firmware (>= 15.0), mobilesubstrate
