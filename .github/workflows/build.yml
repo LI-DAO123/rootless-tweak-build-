@@ -10,26 +10,25 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v4
 
-      - name: Install dependencies
+      - name: Install system dependencies
         run: |
           sudo apt update
-          sudo apt install -y git curl unzip perl build-essential
+          sudo apt install -y git curl unzip perl build-essential bash ca-certificates
 
-      - name: Download Theos
+      - name: Install Theos official
         run: |
-          rm -rf $HOME/theos
-          git clone --recursive https://github.com/theos/theos.git $HOME/theos
+          bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
           echo "THEOS=$HOME/theos" >> $GITHUB_ENV
 
-      - name: Install latest SDK
+      - name: Install SDK
         run: |
           $THEOS/bin/install-sdk latest
 
-      - name: Build package
+      - name: Build
         run: |
           make clean package THEOS_PACKAGE_SCHEME=rootless
 
-      - name: Export deb
+      - name: Upload deb
         uses: actions/upload-artifact@v4
         with:
           name: MyFirstTweak-deb
