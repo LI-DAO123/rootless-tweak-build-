@@ -1,7 +1,0 @@
-Package: com.example.myfirsttweak
-Name: MyFirstTweak
-Version: 1.0
-Architecture: iphoneos-arm64
-Maintainer: me
-Description: My first rootless tweak
-Depends: mobilesubstrate
