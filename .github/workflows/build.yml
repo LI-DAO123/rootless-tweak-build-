@@ -7,16 +7,22 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout source
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Build rootless tweak
-        uses: hbang/build-theos-tweak@main
-        with:
-          scheme: rootless
-          archs: arm64,arm64e
+      - name: Install Theos
+        run: |
+          git clone --recursive https://github.com/theos/theos.git $HOME/theos
+          echo "THEOS=$HOME/theos" >> $GITHUB_ENV
+          sudo apt update
+          sudo apt install -y curl build-essential ldid
 
-      - name: Upload built deb
+      - name: Build & Package
+        run: |
+          make clean
+          make package
+
+      - name: Upload deb
         uses: actions/upload-artifact@v4
         with:
           name: tweak-package
