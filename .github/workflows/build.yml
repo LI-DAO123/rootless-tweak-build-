@@ -1,27 +1,48 @@
-name: Build Tweak
+name: Build Rootless Tweak
+
 on:
   push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: macos-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     steps:
-      - name: Checkout source
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Theos
-        run: |
-          bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
-          echo "THEOS=$HOME/theos" >> $GITHUB_ENV
+      - name: Checkout Theos
+        uses: actions/checkout@v4
+        with:
+          repository: theos/theos
+          ref: master
+          submodules: recursive
+          path: theos
 
-      - name: Build
-        run: |
-          make clean
-          make package
+      - name: Checkout SDKs
+        uses: actions/checkout@v4
+        with:
+          repository: xybp888/iOS-SDKs
+          ref: master
+          sparse-checkout: iPhoneOS15.5.sdk
+          path: theos/sdks
 
-      - name: Upload deb
+      - name: Install dependencies
+        run: brew install make xz ldid
+
+      - name: Build package (rootless)
+        run: |
+          export THEOS=${{ github.workspace }}/theos
+          make clean package FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+
+      - name: Upload deb artifact
         uses: actions/upload-artifact@v4
         with:
-          name: tweak-package
-          path: packages/*.deb
+          name: rootless-deb
+          path: packages/*_iphoneos-arm64.deb
