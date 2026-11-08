@@ -1,9 +1,0 @@
-Package: com.yourname.myfirsttweak
-Name: MyFirstTweak
-Version: 1.0
-Architecture: arm64
-Description: My first rootless tweak
-Maintainer: yourname
-Author: yourname
-Section: Tweaks
-Depends: mobilesubstrate
