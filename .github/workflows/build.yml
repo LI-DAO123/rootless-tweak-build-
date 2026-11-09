@@ -1,9 +1,7 @@
-name: Build Tweak (Free & No Queue)
+name: Build Tweak
 
 on:
   push:
-    branches: [ main, master ]
-  pull_request:
     branches: [ main, master ]
   workflow_dispatch:
 
@@ -15,16 +13,16 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Setup Theos (Linux Environment)
+      - name: Setup Theos
         uses: Randomblock1/theos-action@v1
         with:
           theos-sdks: 'https://github.com/theos/sdks'
 
-      - name: Build Tweak Package
+      - name: Build Package
         run: make package
 
-      - name: Upload Deb Artifact
+      - name: Upload Deb
         uses: actions/upload-artifact@v4
         with:
-          name: MyTweak-Deb-Package
+          name: MyTweak-Deb
           path: packages/*.deb
