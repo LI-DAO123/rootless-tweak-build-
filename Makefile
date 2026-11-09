@@ -1,9 +1,12 @@
 ARCHS = arm64 arm64e
-TARGET = iphone:clang:15.0:15.0
+TARGET = iphone:clang:latest:15.0
+INSTALL_TARGET_PROCESSES = SpringBoard
+THEOS_PACKAGE_SCHEME = rootless
 
 include $(THEOS)/makefiles/common.mk
 
-TWEAK_NAME = Tweak
-Tweak_FILES = Tweak.x
+TWEAK_NAME = MyTweak
+MyTweak_FILES = Tweak.x
+MyTweak_CFLAGS = -fobjc-arc
 
 include $(THEOS_MAKE_PATH)/tweak.mk
