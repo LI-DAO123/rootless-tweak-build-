@@ -1,30 +1,30 @@
-name: Build Tweak (RootHide)
-
+name: Build Tweak
 on:
   push:
-    branches: [ main, master ]
-  workflow_dispatch:
+    branches: [ main ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout Code
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Theos (roothide branch)
+      - name: Setup Theos
         run: |
-          export THEOS=$HOME/theos
-          git clone --recursive https://github.com/roothide/theos.git $THEOS
-          echo "THEOS=$THEOS" >> $GITHUB_ENV
-          echo "$THEOS/bin" >> $GITHUB_PATH
+          git clone --recursive https://github.com/theos/theos.git $HOME/theos
+          echo "THEOS=$HOME/theos" >> $GITHUB_ENV
+          curl -LO https://github.com/theos/sdks/archive/master.zip
+          unzip master.zip -d /tmp/sdktmp
+          mv /tmp/sdktmp/sdks-master/*.sdk $HOME/theos/sdks/
+          rm -rf master.zip /tmp/sdktmp
 
-      - name: Build Tweak Package
-        run: make package
+      - name: Build deb package
+        run: |
+          make package
 
-      - name: Upload Deb Artifact
+      - name: Upload deb
         uses: actions/upload-artifact@v4
         with:
-          name: MyTweak-Deb-Package
-          path: packages/*.deb
+          name: Tweak-Deb
+          path: ./packages/*.deb
