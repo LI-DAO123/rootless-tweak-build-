@@ -1,0 +1,9 @@
+Package: com.yourname.universaltweak
+Name: UniversalTweak
+Version: 1.0.0
+Architecture: iphoneos-arm
+Description: 兼容 iOS 15-16 的测试插件
+Maintainer: YourName
+Author: YourName
+Section: Tweaks
+Depends: mobilesubstrate, firmware (>= 15.0)
