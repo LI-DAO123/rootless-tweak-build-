@@ -2,7 +2,7 @@ Package: com.yourname.mytweak
 Name: MyTweak
 Version: 1.0.0
 Architecture: iphoneos-arm64
-Description: 专为 iPhone 13 iOS 16.2 RootHide 适配
+Description: 适配 RootHide 测试
 Maintainer: YourName
 Author: YourName
 Section: Tweaks
