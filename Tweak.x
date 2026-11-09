@@ -1,40 +1,41 @@
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
 
-%hook SpringBoard
+static UIWindow *debugWindow = nil;
 
-- (void)applicationDidFinishLaunching:(id)application {
-    %orig;
-    
-    // 延迟 3 秒
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"iOS 16 测试"
-                                                                       message:@"如果你看到我，说明插件加载成功！"
-                                                                preferredStyle:UIAlertControllerStyleAlert];
-        [alert addAction:[UIAlertAction actionWithTitle:@"知道了" style:UIAlertActionStyleDefault handler:nil]];
+%ctor {
+    NSLog(@"[MyTweak-Debug] 插件成功加载！当前进程: %@", [[NSProcessInfo processInfo] processName]);
 
-        // 暴力抓取当前活跃的 WindowScene
-        UIWindow *keyWindow = nil;
-        for (UIScene *scene in [UIApplication sharedApplication].connectedScenes) {
-            if ([scene isKindOfClass:[UIWindowScene class]] && scene.activationState == UISceneActivationStateForegroundActive) {
-                for (UIWindow *window in ((UIWindowScene *)scene).windows) {
-                    if (window.isKeyWindow) {
-                        keyWindow = window;
-                        break;
-                    }
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        @try {
+            UIWindowScene *activeScene = nil;
+            for (UIScene *scene in [UIApplication sharedApplication].connectedScenes) {
+                if ([scene isKindOfClass:[UIWindowScene class]]) {
+                    activeScene = (UIWindowScene *)scene;
+                    break;
                 }
             }
-        }
-        
-        // 如果没找到，用废弃 API 兜底
-        if (!keyWindow) {
-            keyWindow = [[UIApplication sharedApplication] keyWindow];
-        }
+            if (!activeScene) return;
 
-        if (keyWindow && keyWindow.rootViewController) {
-            [keyWindow.rootViewController presentViewController:alert animated:YES completion:nil];
+            debugWindow = [[UIWindow alloc] initWithWindowScene:activeScene];
+            debugWindow.windowLevel = UIWindowLevelAlert + 1.0;
+            debugWindow.backgroundColor = [UIColor clearColor];
+
+            UIViewController *rootVC = [[UIViewController alloc] init];
+            rootVC.view.backgroundColor = [UIColor clearColor];
+            debugWindow.rootViewController = rootVC;
+            [debugWindow makeKeyAndVisible];
+
+            UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 100, [UIScreen mainScreen].bounds.size.width, 60)];
+            label.backgroundColor = [UIColor redColor];
+            label.textColor = [UIColor whiteColor];
+            label.text = @"插件注入成功！";
+            label.textAlignment = NSTextAlignmentCenter;
+            label.font = [UIFont boldSystemFontOfSize:24];
+            [rootVC.view addSubview:label];
+            
+        } @catch (NSException *exception) {
+            NSLog(@"[MyTweak-Debug] 异常: %@", exception);
         }
     });
 }
-
-%end
