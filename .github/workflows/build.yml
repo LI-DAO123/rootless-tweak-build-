@@ -1,4 +1,4 @@
-name: Build Tweak
+name: Build Tweak (RootHide)
 
 on:
   push:
@@ -13,16 +13,18 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Setup Theos
-        uses: Randomblock1/theos-action@v1
-        with:
-          theos-sdks: 'https://github.com/theos/sdks'
+      - name: Setup Theos (roothide branch)
+        run: |
+          export THEOS=$HOME/theos
+          git clone --recursive https://github.com/roothide/theos.git $THEOS
+          echo "THEOS=$THEOS" >> $GITHUB_ENV
+          echo "$THEOS/bin" >> $GITHUB_PATH
 
-      - name: Build Package
+      - name: Build Tweak Package
         run: make package
 
-      - name: Upload Deb
+      - name: Upload Deb Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: MyTweak-Deb
+          name: MyTweak-Deb-Package
           path: packages/*.deb
