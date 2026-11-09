@@ -5,11 +5,11 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
-  workflow_dispatch: # 允许手动点击按钮触发编译
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-latest # 核心：使用 Linux 环境，秒开不排队
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Code
