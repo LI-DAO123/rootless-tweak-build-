@@ -1,9 +1,0 @@
-Package: com.yourname.mytweak
-Name: MyTweak
-Version: 1.0.0
-Architecture: iphoneos-arm64
-Description: 适配 iOS 15/16 测试
-Maintainer: YourName
-Author: YourName
-Section: Tweaks
-Depends: mobilesubstrate, firmware (>= 15.0)
