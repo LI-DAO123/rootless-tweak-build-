@@ -6,3 +6,4 @@ Description: 兼容 Dopamine 与 RootHide 的通用测试插件
 Maintainer: YourName
 Author: YourName
 Section: Tweaks
+Depends: ellekit
