@@ -1,9 +1,10 @@
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
-%ctor {
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        NSString *logPath = @"/var/mobile/MyTweak_iPhone13_OK.txt";
-        NSString *logContent = @"[MyTweak] iPhone 13 RootHide 注入成功！";
-        [logContent writeToFile:logPath atomically:YES encoding:NSUTF8StringEncoding error:nil];
-    });
+%hook SpringBoard
+
+- (void)applicationDidFinishLaunching:(id)arg1 {
+    %orig;
+    NSLog(@"✅ 插件加载成功！支持iOS15 / iOS16");
 }
+
+%end
