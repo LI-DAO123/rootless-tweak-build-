@@ -1,0 +1,7 @@
+#import <UIKit/UIKit.h>
+%hook SpringBoard
+- (void)applicationDidFinishLaunching:(id)application {
+    %orig;
+    NSLog(@"[UniversalTweak] 插件已成功加载！");
+}
+%end
