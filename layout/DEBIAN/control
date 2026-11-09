@@ -1,9 +1,9 @@
-Package: com.lidao123.tweak
-Name: MyFirstTweak
+Package: com.yourname.mytweak
+Name: MyTweak
 Version: 1.0.0
-Architecture: iphoneos-arm
-Description: A simple tweak.
-Maintainer: LiDao
-Author: LiDao
+Architecture: iphoneos-arm64
+Description: 适配 iOS 15/16 的免费零排队插件测试
+Maintainer: YourName
+Author: YourName
 Section: Tweaks
-Depends: mobilesubstrate
+Depends: mobilesubstrate, firmware (>= 15.0)
