@@ -2,7 +2,7 @@ Package: com.yourname.mytweak
 Name: MyTweak
 Version: 1.0.0
 Architecture: iphoneos-arm64
-Description: 适配 iOS 15/16 的免费零排队插件测试
+Description: 专为 iPhone 13 iOS 16.2 RootHide 适配
 Maintainer: YourName
 Author: YourName
 Section: Tweaks
