@@ -1,47 +1,30 @@
-name: Build Tweak
+name: Build Tweak (Free & No Queue)
 
 on:
   push:
-    branches: [ main ]
-  workflow_dispatch:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch: # 允许你手动点击按钮触发编译
 
 jobs:
   build:
-    runs-on: macos-13
-    strategy:
-      matrix:
-        scheme: [rootless, rootful]
-      fail-fast: false
-
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    runs-on: ubuntu-latest # 关键：使用 Linux 运行器，永远不排队
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Setup Theos
+      - name: Setup Theos (Linux Environment)
         uses: Randomblock1/theos-action@v1
         with:
-          theos-dir: theos
-          theos-sdks: https://github.com/theos/sdks
-          theos-sdks-branch: master
+          theos-sdks: 'https://github.com/theos/sdks'
 
-      - name: Build Package
-        run: |
-          export THEOS=${{ github.workspace }}/theos
-          make clean
-          
-          if [ "${{ matrix.scheme }}" == "rootless" ]; then
-            echo "Building rootless package..."
-            make package FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          else
-            echo "Building rootful package..."
-            make package FINALPACKAGE=1
-          fi
+      - name: Build Tweak Package
+        run: make package
 
-      - name: Upload Deb
+      - name: Upload Deb Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Tweak-${{ matrix.scheme }}-deb
+          name: MyTweak-Deb-Package
           path: packages/*.deb
