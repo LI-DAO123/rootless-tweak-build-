@@ -2,8 +2,8 @@ Package: com.yourname.universaltweak
 Name: UniversalTweak
 Version: 1.0.0
 Architecture: iphoneos-arm64
-Description: 长按复制功能。
+Description: 纯弹窗测试。
 Maintainer: YourName
 Author: YourName
 Section: Tweaks
-Depends: ellekit, preferenceloader
+Depends: ellekit
