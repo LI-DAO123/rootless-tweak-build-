@@ -1,6 +1,5 @@
 {
     CFBundleDevelopmentRegion = "zh_CN";
-    CFBundleExecutable = "UniversalTweakPrefs";
     CFBundleIdentifier = "com.yourname.universaltweak.prefs";
     CFBundleInfoDictionaryVersion = "6.0";
     CFBundlePackageType = "BNDL";
