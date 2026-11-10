@@ -2,7 +2,7 @@ Package: com.yourname.universaltweak
 Name: UniversalTweak
 Version: 1.0.0
 Architecture: iphoneos-arm64
-Description: 兼容 Dopamine 与 RootHide 的通用测试插件
+Description: 双击状态栏识别屏幕文字，自带设置开关。
 Maintainer: YourName
 Author: YourName
 Section: Tweaks
