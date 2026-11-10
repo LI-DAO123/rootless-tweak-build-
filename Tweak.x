@@ -8,12 +8,11 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         NSString *appName = nil;
         
-        // 使用 @try 防止读取私有属性时崩溃
         @try {
-            appName = [self valueForKey:@"displayName"];
+            // 核心修复：将 self 强转为 id 类型，绕过 SBIconView 前向声明的类型检查
+            appName = [(id)self valueForKey:@"displayName"];
             if (!appName || appName.length == 0) {
-                // 兜底：尝试读取图标下面的 UILabel
-                UILabel *iconLabel = [self valueForKey:@"_labelView"];
+                UILabel *iconLabel = [(id)self valueForKey:@"_labelView"];
                 appName = iconLabel.text;
             }
         } @catch (NSException *exception) {
@@ -25,7 +24,7 @@
         // 复制到剪贴板
         [UIPasteboard generalPasteboard].string = appName;
         
-        // 修复 keyWindow 弃用问题的现代写法
+        // 获取当前窗口，去除了被废弃的 windows 兜底写法
         UIWindow *window = nil;
         if (@available(iOS 13.0, *)) {
             for (UIWindowScene *scene in [UIApplication sharedApplication].connectedScenes) {
@@ -38,11 +37,8 @@
                     }
                 }
             }
-        }
-        
-        // 兜底获取窗口
-        if (!window) {
-            window = [[UIApplication sharedApplication].windows firstObject];
+        } else {
+            window = [[UIApplication sharedApplication].delegate window];
         }
         
         // 弹窗提示
