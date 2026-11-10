@@ -3,7 +3,6 @@
         bundle = "UniversalTweakPrefs";
         cell = PSLinkCell;
         detail = "UniversalTweakPrefsListController";
-        icon = "icon.png"; 
         label = "全局识屏插件";
     };
 }
