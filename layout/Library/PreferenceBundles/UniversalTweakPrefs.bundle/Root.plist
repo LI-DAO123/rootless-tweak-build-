@@ -1,0 +1,20 @@
+{
+    title = "插件设置";
+    items = (
+        {
+            cell = PSGroupCell;
+            label = "双击状态栏识别屏幕文字";
+        },
+        {
+            cell = PSSwitchCell;
+            default = YES;
+            defaults = "com.yourname.universaltweak";
+            key = "enabled";
+            label = "开启识屏功能";
+        },
+        {
+            cell = PSGroupCell;
+            footerText = "开启后，在任意界面双击顶部状态栏，即可提取屏幕上的文字并复制到剪贴板。";
+        }
+    );
+}
